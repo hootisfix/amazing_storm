@@ -1,0 +1,29 @@
+name: CD
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'terraform/**'
+
+defaults:
+  run:
+    working-directory: terraform/
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    env:
+      ENV: production
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Terraform Init
+        id: init
+        run: terraform init -reconfigure -backend-config=config/$ENV/$ENV.tfbackend
+      - name: Terraform Apply
+        id: aplpy
+        run: terraform apply -var-file=config/$ENV/$ENV.tfvars -auto-approve

@@ -1,0 +1,4 @@
+encrypt = true
+bucket  = "tempete-de-direct-terraform"
+key     = "state-storage/tempete-de-direct-infra"
+region  = "eu-west-1"
